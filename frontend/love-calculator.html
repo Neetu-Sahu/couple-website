@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Calculator — Neetu & Dev</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Courgette&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
+    body, html { height:100%; overflow-x:hidden; }
+
+    .bg-overlay {
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background: linear-gradient(120deg, #ffb6f1, #d4a1ff, #ffc8dd);
+      animation: bgFlow 10s infinite alternate ease-in-out;
+      z-index: -2;
+    }
+
+    @keyframes bgFlow {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(40deg); }
+    }
+
+    .sparkles {
+      position: fixed;
+      width:100%; height:100%;
+      top:0; left:0;
+      pointer-events:none;
+      background:url('https://i.imgur.com/6YVvA4o.png');
+      opacity:0.3;
+      animation: sparkleMove 12s linear infinite;
+      z-index:-1;
+    }
+    @keyframes sparkleMove {
+      from { background-position: 0 0; }
+      to   { background-position: 600px 600px; }
+    }
+
+    header { text-align:center; padding:20px; }
+
+    /* UPDATED FONT + DARKER COLOR */
+    .brand { 
+      font-family:'Courgette', cursive;
+      font-size:4.2rem; 
+      background: linear-gradient(90deg, #6a00d8, #d100b8, #ff3ca8);
+      background-size: 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textGlow 6s infinite linear;
+      text-shadow: 0px 0px 25px rgba(255, 255, 255, 0.85);
+    }
+
+    @keyframes textGlow {
+      0% { background-position: 0%; }
+      50% { background-position: 100%; }
+      100% { background-position: 0%; }
+    }
+
+    .love-quote { font-size:1.2rem; color:#fff; margin-bottom:10px; }
+    nav a { color:#fff; text-decoration:none; margin:0 10px; font-weight:600; transition:0.3s; }
+    nav a:hover { color:#ffe3ff; }
+
+    .love-calculator { text-align:center; padding:50px 20px; }
+    .love-calculator h2 { font-size:2rem; color:#fff; margin-bottom:20px; }
+
+    .calculator-container {
+      display:inline-block;
+      background: rgba(255, 255, 255, 0.25);
+      padding:30px;
+      border-radius:20px;
+      backdrop-filter: blur(12px);
+      box-shadow:0px 0px 30px rgba(255, 255, 255, 0.4);
+    }
+
+    .calculator-container input {
+      width:220px; padding:14px; margin:10px; border-radius:10px; border:none;
+      background:rgba(255,255,255,0.8);
+    }
+
+    .calculator-container button {
+      padding:14px 35px; margin-top:10px; border-radius:30px; border:none;
+      background:#cc0aff; color:#fff; font-size:1rem; cursor:pointer; transition:0.3s;
+      box-shadow:0px 4px 15px rgba(150, 0, 220, 0.6);
+    }
+    .calculator-container button:hover {
+      background:#9d00d8; transform:scale(1.07);
+    }
+
+    #result {
+      margin-top:20px; font-weight:700; font-size:1.4rem; color:#fff; 
+      text-shadow:0px 0px 5px #ffb8f4;
+      transition:0.3s;
+    }
+    #result.animate { transform: scale(1.2); color:#fff0ff; }
+
+    .hearts-container {
+      position: fixed; top:0; left:0; width:100%; height:100%;
+      pointer-events:none; z-index:0;
+    }
+
+    .heart {
+      position: absolute; width:25px; height:25px; background:#ff4f9b;
+      transform:rotate(45deg);
+      animation: floatUp linear forwards;
+      opacity:0.9;
+      filter: drop-shadow(0px 0px 8px rgba(255,100,180,0.9));
+    }
+
+    .heart::before,
+    .heart::after {
+      content:''; position:absolute; width:25px; height:25px; background:#ff4f9b; border-radius:50%;
+    }
+    .heart::before { top:-13px; left:0; }
+    .heart::after { left:13px; top:0; }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(45deg); opacity:1; }
+      100% { transform: translateY(-650px) rotate(45deg); opacity:0; }
+    }
+
+    footer { text-align:center; padding:15px; color:#fff; font-weight:600; }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-overlay"></div>
+  <div class="sparkles"></div>
+
+  <header>
+    <h1 class="brand">Real Love Test</h1>
+    <p class="love-quote">"How much do we love each other? Let's find out 💖"</p>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="memories.html">Memories</a>
+      <a href="timeline.html">Timeline</a>
+      <a href="playlist.html">Playlist</a>
+      <a href="password.html">Password</a>
+    </nav>
+  </header>
+
+  <main class="love-calculator">
+    <h2>Love Calculator</h2>
+
+    <div class="calculator-container">
+      <input type="text" id="name1" placeholder="Your Name">
+      <input type="text" id="name2" placeholder="Partner's Name">
+      <button id="calcBtn">Calculate ❤</button>
+      <p id="result"></p>
+    </div>
+
+    <div class="hearts-container"></div>
+  </main>
+
+  <footer>
+    <p>N ❤ D</p>
+  </footer>
+
+  <script>
+    (function(){
+      function simpleHash(s){
+        let h = 0;
+        for(let i=0;i<s.length;i++) h = (h<<5)-h + s.charCodeAt(i);
+        return Math.abs(h);
+      }
+
+      const btn = document.getElementById('calcBtn');
+      const result = document.getElementById('result');
+
+      btn.addEventListener('click', ()=>{
+        const a = (document.getElementById('name1').value||'').trim();
+        const b = (document.getElementById('name2').value||'').trim();
+
+        if(!a || !b){
+          result.innerText = 'Please enter both names.';
+          return;
+        }
+
+        const seed = simpleHash(a.toLowerCase()+"|"+b.toLowerCase());
+        const percent = (seed % 101);
+
+        result.innerText = `Compatibility: ${percent}% 💕`;
+        result.classList.add('animate');
+        setTimeout(()=> result.classList.remove('animate'), 1000);
+      });
+
+      const heartsContainer = document.querySelector('.hearts-container');
+
+      function createHeart(){
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = (3 + Math.random() * 3) + 's';
+        heart.style.background = `hsl(${Math.random()*40+330}, 80%, 65%)`;
+        heartsContainer.appendChild(heart);
+        setTimeout(()=> heart.remove(), 6000);
+      }
+
+      setInterval(createHeart, 400);
+    })();
+  </script>
+
+</body>
+</html>

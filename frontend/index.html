@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neetu & Dev</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@400;600&family=Great+Vibes&family=Courgette&display=swap" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background: url('assets/bg.jpg') no-repeat center center fixed; background-size: cover; color: #fff; overflow-x: hidden; position: relative; }
+
+.bg-overlay { position: fixed; top:0; left:0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: -1; }
+
+header { text-align: center; padding: 60px 20px 30px; position: relative; }
+
+.brand {
+    font-family: 'Great Vibes', cursive;
+    font-size: 4rem;
+    background: linear-gradient(90deg, #ff6fcf, #ff99d6, #ffb3f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(255,150,200,0.6);
+    animation: glow 5s infinite alternate;
+}
+@keyframes glow {
+    0% { text-shadow: 0 0 15px rgba(255,150,200,0.4); }
+    50% { text-shadow: 0 0 25px rgba(255,150,255,0.7); }
+    100% { text-shadow: 0 0 15px rgba(255,150,200,0.4); }
+}
+
+.love-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    margin-top: 8px;
+    color: #ffc0e0;
+    text-shadow: 0 0 6px rgba(255, 200, 230,0.6);
+}
+
+/* ======================= NAV BUTTONS BUBBLY + CONTINUOUS SPARKLES ====================== */
+nav a {
+    text-decoration: none;
+    margin: 0 12px;
+    color: #fff;
+    font-weight: 600;
+    padding: 12px 22px;
+    border-radius: 50px;
+    transition: 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.15));
+    box-shadow: 0 4px 15px rgba(255,150,220,0.3);
+    display: inline-block;
+    animation: floatButton 3s ease-in-out infinite alternate;
+}
+
+/* Slight floating animation */
+@keyframes floatButton {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-4px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Bubble hover + glow */
+nav a:hover {
+    transform: scale(1.15);
+    background: linear-gradient(145deg, #ff79b6, #ffb6d6);
+    box-shadow: 0 0 18px rgba(255,150,220,0.8), 0 0 30px rgba(255,50,180,0.6);
+}
+
+/* Sparkle hover */
+.sparkle-nav {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: sparkleFly 0.9s linear forwards;
+    opacity: 0.8;
+    box-shadow: 0 0 6px #fff, 0 0 12px #ff79b6, 0 0 18px #ffb6d6;
+}
+@keyframes sparkleFly {
+    0% { transform: translate(0,0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--x), var(--y)) scale(0.2); opacity: 0; }
+}
+
+/* Continuous random sparkles */
+nav a .sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    box-shadow: 0 0 6px #fff, 0 0 12px #ff79b6, 0 0 18px #ffb6d6;
+    animation: sparkleAnim 2s linear infinite;
+}
+@keyframes sparkleAnim {
+    0% { transform: scale(0); opacity: 0; }
+    20% { transform: scale(1); opacity: 1; }
+    80% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+/* Memories */
+.featured-memories { padding: 50px 20px; text-align: center; }
+.featured-memories h2 {
+    font-family: 'Courgette', cursive;
+    font-size: 4rem;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg,#ffb6d6,#ff79b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 12px rgba(255,0,120,0.5);
+}
+#upload-memory {
+    font-size: 2rem;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: transform 0.3s, background 0.3s;
+}
+#upload-memory:hover { transform: scale(1.2); background: rgba(255,255,255,0.2); }
+
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+    gap: 20px;
+}
+
+.memory-card {
+    background: rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.memory-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.memory-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 30px rgba(255,50,180,0.5);
+}
+.memory-card button {
+    background: rgba(255,50,180,0.6);
+    border: none;
+    color: #fff;
+    padding: 6px 12px;
+    margin: 4px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.memory-card button:hover { background: #ff3fc5; }
+
+/* Our Nicknames Section */
+.our-nicknames {
+    background: rgba(0,0,0,0.6);
+    padding: 30px 20px;
+    text-align: center;
+    margin-top: 40px;
+    border-radius: 14px;
+}
+.our-nicknames h2 {
+    font-family: 'Courgette', cursive;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg,#ffb6d6,#ff79b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 10px rgba(255,50,150,0.6);
+}
+.nickname-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 20px;
+}
+.nickname-column {
+    flex: 1 1 250px;
+    background: rgba(255,255,255,0.08);
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+    backdrop-filter: blur(6px);
+}
+.nickname-column h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #ffc0e0;
+    text-shadow: 0 0 6px rgba(255, 200, 230,0.6);
+}
+.nickname-column ul {
+    list-style: none;
+    padding-left: 0;
+    font-size: 1.2rem;
+    color: #fff;
+}
+.nickname-column li {
+    margin: 8px 0;
+    padding: 6px 10px;
+    background: rgba(255,50,180,0.2);
+    border-radius: 8px;
+    transition: 0.3s;
+}
+.nickname-column li:hover {
+    background: rgba(255,50,180,0.5);
+    transform: scale(1.05);
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 2rem;
+    background: rgba(0,0,0,0.5);
+    margin-top: 40px;
+}
+.heart {
+    position: fixed;
+    font-size: 20px;
+    pointer-events: none;
+    animation: floatHeart 2s ease-out forwards;
+}
+@keyframes floatHeart {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-500px) scale(1.5); opacity: 0; }
+}
+
+/* Logo */
+.site-logo {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    width: 66px;
+    height: 66px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.15);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+    transition: transform 200ms cubic-bezier(.2,.7,.2,1), box-shadow 200ms;
+    background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(255,255,255,0.05));
+}
+.site-logo:hover {
+    transform: rotate(-6deg) scale(1.06);
+    box-shadow: 0 12px 30px rgba(255, 140, 200, 0.35);
+}
+@media screen and (max-width: 480px) {
+    .site-logo { width: 48px; height: 48px; top: 10px; right: 12px; }
+}
+</style>
+</head>
+
+<body>
+<div class="bg-overlay"></div>
+
+<header>
+    <h1 class="brand">Neetu & Dev</h1>
+    <br>
+    <p class="love-quote">"Forever Connected.. ❤"</p>
+    <br><br><br>
+
+    <nav id="navBar">
+        <a href="memories.html">Memories</a>
+        <a href="timeline.html">Timeline</a>
+        <a href="love-calculator.html">Love Calculator</a>
+        <a href="playlist.html">Playlist</a>
+        <a href="password.html">Password</a>
+    </nav>
+
+    <a class="logo-link" href="index.html" aria-label="Neetu and Dev logo">
+        <img class="site-logo" src="assets/logo.png" alt="Neetu & Dev Logo" onerror="this.style.display='none'" />
+    </a>
+</header>
+
+<section class="featured-memories">
+    <h2>Our Lovestory</h2>
+    <p>It began in a quiet classroom,</p>
+<p>placed you beside me.</p>
+<p>started as friendship’s spark</p> 
+<p>Bloomed into laughter, secrets, and stolen glances.</p>
+<p>From jokes to dreams, our hearts entwined—</p>
+<p>A little world of joy, forever ours.❤️</p>
+</section>
+
+
+<style>
+  @keyframes floatStory {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-10px); }
+  }
+</style>
+
+
+<!-- Nicknames Section -->
+<section class="our-nicknames">
+    <h2>Our Nicknames</h2>
+    <div class="nickname-container">
+        <div class="nickname-column">
+            <h3>His, given by her</h3>
+            <ul>
+                <li>Idiot</li>
+                <li>Gadha</li>
+                <li>Monkey</li>
+                <li>Sasta Hero</li>
+                <li>Aloo Bhujia</li>
+            </ul>
+        </div>
+        <div class="nickname-column">
+            <h3>Her's, given by him</h3>
+            <ul>
+                <li>Kaku</li>
+                <li>Pippo</li>
+                <li>Chipkali</li>
+                <li>My Baccha</li>
+                <li>Boondi ka Laddoo</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<footer><p>N ❤ D</p></footer>
+
+<script>
+/* Floating Hearts */
+document.addEventListener('click', e => {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.style.left = e.pageX + 'px';
+    heart.style.top = e.pageY + 'px';
+    heart.innerText = '💖';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 2000);
+});
+
+/* NAV BUTTON SPARKLES */
+document.querySelectorAll("nav a").forEach(btn => {
+    btn.addEventListener("mousemove", e => {
+        for(let i=0;i<6;i++){
+            let s = document.createElement("div");
+            s.className = "sparkle-nav";
+            const rect = btn.getBoundingClientRect();
+            s.style.left = (e.clientX - rect.left) + "px";
+            s.style.top = (e.clientY - rect.top) + "px";
+            s.style.setProperty("--x", (Math.random()*60-30)+"px");
+            s.style.setProperty("--y", (Math.random()*60-30)+"px");
+            btn.appendChild(s);
+            setTimeout(()=>s.remove(),900);
+        }
+    });
+
+    // Continuous sparkles
+    setInterval(() => {
+        const s = document.createElement("div");
+        s.className = "sparkle";
+        s.style.left = Math.random() * btn.offsetWidth + "px";
+        s.style.top = Math.random() * btn.offsetHeight + "px";
+        btn.appendChild(s);
+        setTimeout(()=>s.remove(), 2000);
+    }, 300 + Math.random()*700);
+});
+
+/* MEMORIES */
+const uploadBtn = document.getElementById('upload-memory');
+const memoryContainer = document.getElementById('memory-container');
+let memories = JSON.parse(localStorage.getItem('memories') || '[]');
+function saveMemories() { localStorage.setItem('memories', JSON.stringify(memories)); }
+// Helper to get Authorization headers
+function getAuthHeaders(contentType) {
+    const token = localStorage.getItem('memoriesToken');
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (contentType) headers['Content-Type'] = contentType;
+    return headers;
+}
+
+// Attempt to load from server if token available; store normalized data to localStorage for UI
+async function loadFromServer() {
+    const token = localStorage.getItem('memoriesToken');
+    if (!token) return false;
+    try {
+        const res = await fetch('/memories', { headers: getAuthHeaders() });
+        if (res.status === 401) { window.location.href = 'password.html'; return false; }
+        if (!res.ok) return false;
+        const data = await res.json();
+        if (!Array.isArray(data)) return false;
+        // Normalize and store as local 'memories' so page continues to work
+        memories = data.slice().reverse().map(m => ({ id: m.id, src: m.imageUrl, caption: m.caption, name: m.name, details: m.details }));
+        saveMemories();
+        loadMemories();
+        return true;
+    } catch (err) { return false; }
+}
+function renderMemory(memory, index) {
+    const div = document.createElement('div');
+    div.className = 'memory-card';
+    div.draggable = true;
+    div.dataset.index = index;
+    div.innerHTML = `
+        <img src="${memory.src}" alt="Memory">
+        <h3>${memory.caption}</h3>
+        <p style='font-weight:600;margin-top:6px;'>By: ${memory.name || ''}</p>
+        <button class="edit">Edit</button>
+        <button class="delete">Delete</button>
+    `;
+    div.querySelector('.edit').onclick = async () => {
+        const newCaption = prompt('Edit caption:', memory.caption);
+        const newName = prompt('Edit name:', memory.name || '');
+        if (newCaption === null && newName === null) return;
+        // Update server if this memory has an id
+        if (memory.id) {
+            try {
+                const headers = getAuthHeaders('application/json');
+                const resp = await fetch(`/memories/${encodeURIComponent(memory.id)}`, { method: 'PUT', headers, body: JSON.stringify({ caption: (newCaption !== null ? newCaption : memory.caption), name: (newName !== null ? newName : memory.name) }) });
+                if (resp.status === 401) { window.location.href = 'password.html'; return; }
+                if (resp.ok) { await loadFromServer(); return; }
+                const err = await resp.json().catch(()=>({}));
+                alert(err.error || 'Failed to update memory on server');
+            } catch (err) { alert('Network error while updating memory'); }
+        } else {
+            if (newCaption !== null) memory.caption = newCaption;
+            if (newName !== null) memory.name = newName;
+            saveMemories(); loadMemories();
+        }
+    };
+    div.querySelector('.delete').onclick = async () => {
+        if (!confirm('Delete this memory?')) return;
+        if (memory.id) {
+            try {
+                const headers = getAuthHeaders();
+                const resp = await fetch(`/memories/${encodeURIComponent(memory.id)}`, { method: 'DELETE', headers });
+                if (resp.status === 401) { window.location.href = 'password.html'; return; }
+                if (resp.ok) { await loadFromServer(); return; }
+                const err = await resp.json().catch(()=>({}));
+                alert(err.error || 'Failed to delete memory on server');
+            } catch (err) { alert('Network error while deleting memory'); }
+        } else {
+            memories.splice(index,1); saveMemories(); loadMemories();
+        }
+    };
+    div.addEventListener('dragstart', e => e.dataTransfer.setData('text/plain', index));
+    div.addEventListener('dragover', e => e.preventDefault());
+    div.addEventListener('drop', e => {
+        e.preventDefault();
+        const draggedIndex = e.dataTransfer.getData('text/plain');
+        const targetIndex = div.dataset.index;
+        if(draggedIndex === targetIndex) return;
+        const temp = memories[draggedIndex];
+        memories.splice(draggedIndex,1);
+        memories.splice(targetIndex,0,temp);
+        saveMemories(); loadMemories();
+    });
+    memoryContainer.appendChild(div);
+}
+function loadMemories() {
+    memoryContainer.innerHTML = '';
+    memories.forEach((m,i)=>renderMemory(m,i));
+}
+uploadBtn.addEventListener('click', async () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.click();
+    fileInput.onchange = async () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+        const caption = prompt('Enter a caption for this memory:') || '';
+        const name = prompt('Enter the name (By):') || '';
+        const token = localStorage.getItem('memoriesToken');
+        if (token) {
+            try {
+                const fd = new FormData();
+                fd.append('file', file);
+                fd.append('caption', caption);
+                fd.append('name', name);
+                fd.append('details', '');
+                const headers = getAuthHeaders(); // content-type auto set for form data
+                const resp = await fetch('/upload-memory', { method: 'POST', headers, body: fd });
+                if (resp.status === 401) { window.location.href = 'password.html'; return; }
+                if (resp.ok) { await loadFromServer(); return; }
+            } catch (err) { /* fallback below */ }
+        }
+        const reader = new FileReader();
+        reader.onload = e => {
+            memories.push({src:e.target.result,caption, name});
+            saveMemories(); loadMemories();
+        };
+        reader.readAsDataURL(file);
+    };
+});
+window.addEventListener('load', async () => { if (!await loadFromServer()) loadMemories(); });
+</script>
+
+</body>
+</html>

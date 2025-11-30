@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Playlist — Neetu & Dev</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Courgette&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #0a0014; color: #fff; overflow-x: hidden; }
+
+        /* Animated magical background */
+        .bg-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(120deg, #2b0045, #5a006a, #24002d);
+            animation: bgFlow 9s infinite alternate ease-in-out;
+            z-index: -2;
+        }
+        @keyframes bgFlow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(45deg); }
+        }
+
+        /* Sparkles overlay */
+        .sparkles {
+            position: fixed;
+            width: 100%; height: 100%;
+            background: url('https://i.imgur.com/6YVvA4o.png');
+            opacity: .27;
+            animation: sparkleMove 14s linear infinite;
+            z-index: -1;
+        }
+        @keyframes sparkleMove {
+            from { background-position: 0 0; }
+            to { background-position: 600px 600px; }
+        }
+
+        /* Header */
+        header { text-align: center; padding: 25px; }
+
+        /* Brand — Courgette font with gradient glow */
+        .brand {
+            font-family: 'Courgette', cursive;
+            font-size: 3.6rem;
+            background: linear-gradient(90deg, #ff13a8, #ff7de0, #ffb3f6);
+            background-size: 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGlow 6s infinite linear;
+            text-shadow: 0 0 18px rgba(255, 170, 255, 0.9);
+        }
+        @keyframes textGlow {
+            0% { background-position: 0%; }
+            50% { background-position: 100%; }
+            100% { background-position: 0%; }
+        }
+
+        .love-quote { font-size:1.1rem; color:#ffbdf8; margin-top:6px; }
+
+        nav a {
+            color: #ffd8ff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: 600;
+            transition: .3s;
+        }
+        nav a:hover { color: #ffffff; }
+
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 12px #ff9df1;
+        }
+
+        input, button { padding: 10px; border-radius: 8px; border: none; }
+
+        input {
+            background: #1a0025;
+            color: #ffd8ff;
+            border: 1px solid #ff7de0;
+        }
+
+        .btn {
+            background: #ff3fc5;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+        }
+        .btn:hover { background: #ff71db; transform: scale(1.05); }
+
+        ul { list-style: none; padding: 0; margin-top: 20px; }
+        li {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            backdrop-filter: blur(3px);
+            box-shadow: 0 0 12px rgba(255, 90, 220, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        audio { width: 100%; margin-top: 10px; }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: #ffccff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-overlay"></div>
+    <div class="sparkles"></div>
+
+    <header>
+        <h1 class="brand">Melodies of Us</h1>
+        <p class="love-quote">"Our love in music 🎶❤"</p>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="memories.html">Memories</a>
+            <a href="timeline.html">Timeline</a>
+            <a href="love-calculator.html">Love Calculator</a>
+            <a href="password.html">Password</a>
+        </nav>
+    </header>
+
+    <main style="padding: 30px; text-align: center;">
+        <h2>Love Playlist 🎧💗</h2>
+
+        <div style="max-width: 720px; margin: auto;">
+            <form id="upload-form" style="margin-bottom:16px; display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap;">
+                <input type="text" id="songTitle" placeholder="Song title (optional)">
+                <input type="file" id="songFile" accept="audio/*">
+                <button class="btn" id="uploadSong">Upload</button>
+            </form>
+
+            <ul id="playlist"></ul>
+        </div>
+    </main>
+
+    <footer>
+        <p>N ❤ D</p>
+    </footer>
+
+    <!-- JS -->
+    <script>
+        (function() {
+            const list = document.getElementById('playlist');
+            const form = document.getElementById('upload-form');
+            const fileInput = document.getElementById('songFile');
+            const titleInput = document.getElementById('songTitle');
+
+            function loadSongs() {
+                fetch('/songs')
+                    .then(res => res.json())
+                    .then(songs => {
+                        list.innerHTML = '';
+                        if (!songs || !songs.length) {
+                            list.innerHTML = '<li>No songs added yet 🎵</li>';
+                            return;
+                        }
+                        songs.forEach((s, index) => {
+                            const li = document.createElement('li');
+                            li.innerHTML = `
+                                <div style="display:flex; gap:12px; align-items:center; justify-content:space-between;">
+                                    <div style="text-align:left;">
+                                        <strong style="color:#ffb3f6;">${s.title}</strong>
+                                    </div>
+                                    <div>
+                                        <button class="btn play" style="margin-right:8px;">Play</button>
+                                        <button class="btn delete" style="background:#ff6b9a;">Delete</button>
+                                    </div>
+                                </div>
+                                <audio controls src="${s.url}"></audio>
+                            `;
+                            list.appendChild(li);
+
+                            // Highlight currently playing
+                            const audioEl = li.querySelector('audio');
+                            audioEl.addEventListener('play', () => {
+                                document.querySelectorAll('#playlist li').forEach(item => {
+                                    item.style.boxShadow = '0 0 12px rgba(255, 90, 220, 0.3)';
+                                    item.style.transform = 'scale(1)';
+                                });
+                                li.style.boxShadow = '0 0 18px rgba(255, 100, 255, 0.7)';
+                                li.style.transform = 'scale(1.03)';
+                            });
+                            audioEl.addEventListener('pause', () => {
+                                li.style.boxShadow = '0 0 12px rgba(255, 90, 220, 0.3)';
+                                li.style.transform = 'scale(1)';
+                            });
+
+                            // Delete button
+                            const deleteBtn = li.querySelector('.delete');
+                            deleteBtn.addEventListener('click', async () => {
+                                if (!confirm('Delete this song? This will remove it for everyone.')) return;
+                                try {
+                                    const resp = await fetch(`/songs/${encodeURIComponent(s.filename)}`, { method: 'DELETE' });
+                                    if (!resp.ok) {
+                                        const err = await resp.json().catch(() => ({}));
+                                        alert(err.error || 'Delete failed');
+                                    } else {
+                                        loadSongs();
+                                    }
+                                } catch (err) {
+                                    alert('Network error while deleting');
+                                }
+                            });
+                        });
+                    })
+                    .catch(() => list.innerHTML = '<li>Error loading songs</li>');
+            }
+
+            loadSongs();
+
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                if (!fileInput.files.length) {
+                    alert('Please choose an audio file');
+                    return;
+                }
+
+                const fd = new FormData();
+                fd.append('file', fileInput.files[0]);
+                fd.append('title', titleInput.value || fileInput.files[0].name);
+
+                fetch('/upload-song', { method: 'POST', body: fd })
+                    .then(r => r.json())
+                    .then(resp => {
+                        if (resp && resp.song) {
+                            titleInput.value = '';
+                            fileInput.value = '';
+                            loadSongs();
+                            createHeartAnimation(); // floating heart effect
+                        } else {
+                            alert('Upload failed');
+                        }
+                    })
+                    .catch(() => alert('Upload error'));
+            });
+
+            // Floating heart effect
+            function createHeartAnimation() {
+                const heart = document.createElement('div');
+                heart.innerText = '💖';
+                heart.style.position = 'fixed';
+                heart.style.left = (Math.random() * window.innerWidth) + 'px';
+                heart.style.top = window.innerHeight + 'px';
+                heart.style.fontSize = '24px';
+                heart.style.opacity = 1;
+                heart.style.pointerEvents = 'none';
+                heart.style.transition = 'transform 2s ease-out, opacity 2s ease-out';
+                document.body.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.style.transform = `translateY(-${window.innerHeight + 100}px) scale(1.5) rotate(${Math.random()*360}deg)`;
+                    heart.style.opacity = 0;
+                }, 50);
+
+                setTimeout(() => document.body.removeChild(heart), 2100);
+            }
+        })();
+    </script>
+</body>
+</html>

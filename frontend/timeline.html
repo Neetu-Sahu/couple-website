@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timeline</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@400;600&family=Great+Vibes&family=Courgette&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        overflow-x: hidden;
+        position: relative;
+
+        /* Animated pink gradient background */
+        background: linear-gradient(270deg, #ffc1e3, #ff9ddf, #ffc6f1, #ffe6f0);
+        background-size: 800% 800%;
+        animation: gradientAnimation 20s ease infinite;
+    }
+
+    @keyframes gradientAnimation {
+        0%{background-position:0% 50%}
+        50%{background-position:100% 50%}
+        100%{background-position:0% 50%}
+    }
+
+    /* Animated pattern overlay */
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px),
+                          radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+        background-size: 40px 40px, 60px 60px;
+        background-position: 0 0, 30px 30px;
+        pointer-events: none;
+        z-index: 0;
+        animation: movePattern 30s linear infinite;
+    }
+
+    @keyframes movePattern {
+        0% { background-position: 0 0, 30px 30px; }
+        50% { background-position: 100px 50px, 130px 80px; }
+        100% { background-position: 0 0, 30px 30px; }
+    }
+
+    /* Floating hearts, sparkles, and stars */
+    .floating-symbol {
+        position: absolute;
+        font-size: 12px;
+        color: #fff;
+        animation: floatSymbol linear infinite;
+        pointer-events: none;
+        opacity: 0.8;
+        text-shadow: 0 0 6px #fff, 0 0 12px #ff69b4;
+        z-index: 1;
+    }
+
+    @keyframes floatSymbol {
+        0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+        50% { opacity: 1; }
+        100% { transform: translateY(-1200px) rotate(360deg); opacity: 0; }
+    }
+
+    header {
+        text-align: center;
+        padding: 20px;
+        position: relative;
+        z-index: 2;
+        text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff1493;
+    }
+
+    .brand {
+        font-family: 'Courgette', cursive;
+        font-size: 3rem;
+        margin: 0;
+        color: #ff1493;
+        text-shadow: 0 0 15px #ff69b4, 0 0 25px #ff66b2;
+    }
+
+    .love-quote {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        color: #ff66b2;
+        text-shadow: 0 0 10px #ffb3d9;
+    }
+
+    nav a {
+        margin: 0 10px;
+        text-decoration: none;
+        color: #ff69b4;
+        font-weight: 600;
+        padding: 8px 15px;
+        border-radius: 25px;
+        border: 2px solid #ff69b4;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 5px rgba(255,105,180,0.5);
+        background-color: rgba(255,255,255,0.3);
+    }
+
+    nav a:hover {
+        color: #fff;
+        background: #ff69b4;
+        box-shadow: 0 0 15px #ff1493, 0 0 25px #ff69b4;
+        transform: scale(1.1);
+    }
+
+    .timeline {
+        position: relative;
+        max-width: 800px;
+        margin: 50px auto;
+        padding-bottom: 50px;
+        z-index: 2;
+    }
+
+    .timeline::after {
+        content: '';
+        position: absolute;
+        width: 4px;
+        background: #ff69b4;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        margin-left: -2px;
+    }
+
+    .timeline-item {
+        padding: 20px;
+        position: relative;
+        width: 50%;
+        animation: floatCard 3s ease-in-out infinite alternate;
+    }
+
+    .timeline-item.left { left: 0; text-align: right; }
+    .timeline-item.right { left: 50%; text-align: left; }
+
+    .timeline-item::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: #ff1493;
+        border-radius: 50%;
+        top: 20px;
+        z-index: 1;
+        box-shadow: 0 0 10px #ff69b4;
+        animation: floatDot 2s ease-in-out infinite alternate;
+    }
+
+    .timeline-item.left::after { right: -10px; }
+    .timeline-item.right::after { left: -10px; }
+
+    .timeline-item .content {
+        background: rgba(255,105,180,0.2);
+        padding: 25px 15px;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(255,105,180,0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .timeline-item .content h3 {
+        margin: 0;
+        color: #ff1493;
+        font-family: 'Great Vibes', cursive;
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .editable-date {
+        margin-top: 10px;
+        padding: 7px;
+        border-radius: 5px;
+        border: 1px solid #ff69b4;
+        outline: none;
+        background: rgba(255,255,255,0.7);
+    }
+
+    footer {
+        text-align: center;
+        padding: 20px;
+        font-size: 1.2rem;
+        color: #ff1493;
+        font-family: 'Courgette', cursive;
+        position: relative;
+        z-index: 2;
+        text-shadow: 0 0 10px #ff69b4;
+    }
+
+    @keyframes floatCard {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+
+    @keyframes floatDot {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-6px); }
+        100% { transform: translateY(0px); }
+    }
+</style>
+</head>
+<body>
+
+<!-- Floating hearts, sparkles, and stars -->
+<script>
+    const symbols = ['✨','💖','❤️','💫','🌸','💗','⭐'];
+    for(let i=0;i<60;i++){
+        const span = document.createElement('span');
+        span.classList.add('floating-symbol');
+        span.style.left = Math.random()*100 + 'vw';
+        span.style.fontSize = (10 + Math.random()*20) + 'px';
+        span.style.animationDuration = (5 + Math.random()*7) + 's';
+        span.style.opacity = Math.random() * 0.7 + 0.3;
+        span.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+        document.body.appendChild(span);
+    }
+</script>
+
+<header>
+    <h1 class="brand">Our First 's</h1>
+    <p class="love-quote">"Our Love Journey Timeline ✨"</p>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="memories.html">Memories</a>
+        <a href="love-calculator.html">Love Calculator</a>
+        <a href="playlist.html">Playlist</a>
+        <a href="password.html">Password</a>
+    </nav>
+</header>
+
+<section class="timeline">
+    <div class="timeline-item left">
+        <div class="content">
+            <h3>First Meet</h3>
+            <input type="date" data-date-key="first-meet" class="editable-date" />
+        </div>
+    </div>
+    <div class="timeline-item right">
+        <div class="content">
+            <h3>First Kiss</h3>
+            <input type="date" data-date-key="first-kiss" class="editable-date" />
+        </div>
+    </div>
+    <div class="timeline-item left">
+        <div class="content">
+            <h3>First Date</h3>
+            <input type="date" data-date-key="first-date" class="editable-date" />
+        </div>
+    </div>
+    <div class="timeline-item right">
+        <div class="content">
+            <h3>Her Birthday</h3>
+            <input type="date" data-date-key="her-birthday" class="editable-date" />
+        </div>
+    </div>
+    <div class="timeline-item left">
+        <div class="content">
+            <h3>Anniversary</h3>
+            <input type="date" data-date-key="anniversary" class="editable-date" />
+        </div>
+    </div>
+    <div class="timeline-item right">
+        <div class="content">
+            <h3>His Birthday</h3>
+            <input type="date" data-date-key="his-birthday" class="editable-date" />
+        </div>
+    </div>
+    <div class="timeline-item left">
+        <div class="content">
+            <h3>First Fight</h3>
+            <input type="date" data-date-key="first-fight" class="editable-date" />
+        </div>
+    </div>
+    <div class="timeline-item right">
+        <div class="content">
+            <h3>First Hug</h3>
+            <input type="date" data-date-key="first-hug" class="editable-date" />
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>N ❤ D</p>
+</footer>
+
+<script>
+    // Editable Dates
+    // Setup BroadcastChannel (optional) to notify other tabs/windows immediately
+    let bc = null;
+    try { bc = new BroadcastChannel('couple-dates'); } catch (err) { bc = null; }
+    document.querySelectorAll('.editable-date').forEach(el => {
+        const key = el.dataset.dateKey;
+        const saved = localStorage.getItem(key);
+        if(saved) el.value = saved;
+
+        el.addEventListener('change', async () => {
+            const value = el.value || '';
+            localStorage.setItem(key, value);
+            // notify other tabs
+            if (bc) bc.postMessage({ type: 'dates-updated', key, value });
+            // best-effort persist to server (merge-save)
+            try {
+                const all = {};
+                document.querySelectorAll('.editable-date').forEach(d => { if (d.value) all[d.dataset.dateKey] = d.value; });
+                await fetch('/dates', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(all) });
+            } catch (err) { /* ignore */ }
+        });
+
+        el.addEventListener('focus', () => el.style.outline = '2px dashed #ff79b6');
+        el.addEventListener('blur', () => el.style.outline = 'none');
+    });
+
+    window.addEventListener('storage', (e) => {
+        if(e.key){
+            const el = document.querySelector(`[data-date-key="${e.key}"]`);
+            if(el) el.value = e.newValue || '';
+        }
+    });
+</script>
+</body>
+</html>  

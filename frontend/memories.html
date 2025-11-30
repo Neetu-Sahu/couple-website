@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memories — Neetu & Dev</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Courgette&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Poppins', sans-serif; }
+
+    /* Background Gradient */
+    .bg-overlay {
+      position: fixed;
+      width:100%; height:100%;
+      background: linear-gradient(120deg, #ffb6f1, #d4a1ff, #ffc8dd);
+      animation: bgFlow 10s infinite alternate ease-in-out;
+      z-index:-3;
+      top:0; left:0;
+    }
+    @keyframes bgFlow {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(40deg); }
+    }
+
+    /* Sparkles */
+    .sparkles {
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      pointer-events:none;
+      background:url('https://i.imgur.com/6YVvA4o.png');
+      opacity:0.3;
+      animation: sparkleMove 12s linear infinite;
+      z-index:-2;
+    }
+    @keyframes sparkleMove {
+      from { background-position:0 0; }
+      to   { background-position:600px 600px; }
+    }
+
+    header {
+      text-align:center;
+      padding:20px 10px;
+      color:#fff;
+    }
+
+    /* COURGETTE FONT - BRAND TITLE */
+    .brand {
+      font-family:'Courgette', cursive;
+      font-size:4rem;
+      background:linear-gradient(90deg, #8500cc, #ff2dd5, #ff76cc);
+      background-size:300%;
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      animation:textGlow 6s infinite linear;
+      text-shadow:0px 0px 20px rgba(255,255,255,0.7);
+    }
+    @keyframes textGlow {
+      0%{background-position:0%;}
+      50%{background-position:100%;}
+      100%{background-position:0%;}
+    }
+
+    nav a {
+      color:white;
+      font-weight:600;
+      margin:0 12px;
+      text-decoration:none;
+      font-size:1rem;
+      transition:0.3s;
+    }
+    nav a:hover { color:#ffeaff; }
+
+    .love-quote {
+      font-size:1.1rem;
+      margin-bottom:10px;
+      color:white;
+    }
+
+    /* Section Heading */
+    h2 {
+      text-align:center;
+      color:white;
+      font-size:2.3rem;
+      margin:20px 0;
+      background:linear-gradient(90deg, #a100ff, #ff4edd, #ff8ad8);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      animation:textGlow 7s infinite linear;
+    }
+
+    /* Upload Memory Form */
+    form input, form textarea {
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:none;
+      background:rgba(255,255,255,0.85);
+    }
+    form textarea {
+      resize:none;
+      height:90px;
+    }
+
+    .btn {
+      padding:12px 30px;
+      background:#cc0aff;
+      border:none;
+      border-radius:25px;
+      color:white;
+      margin-top:5px;
+      cursor:pointer;
+      font-weight:600;
+      box-shadow:0px 4px 15px rgba(150, 0, 220, 0.6);
+      transition:0.3s;
+    }
+    .btn:hover {
+      background:#9700c0;
+      transform:scale(1.06);
+    }
+
+    /* Memories Grid */
+    .memory-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+      gap:20px;
+      padding:20px;
+    }
+
+    .memory-card {
+      background:rgba(255,255,255,0.25);
+      backdrop-filter:blur(12px);
+      padding:18px;
+      border-radius:20px;
+      box-shadow:0px 0px 25px rgba(255,255,255,0.4);
+      color:white;
+      animation:fadeIn 1s ease forwards;
+      transform:translateY(20px);
+      opacity:0;
+    }
+    @keyframes fadeIn {
+      to { transform:translateY(0); opacity:1; }
+    }
+
+    .memory-card img {
+      width:100%; border-radius:15px; margin-bottom:12px;
+      box-shadow:0px 0px 10px rgba(255,255,255,0.4);
+    }
+
+    .memory-card h3 {
+      font-size:1.2rem; margin-bottom:5px;
+      font-weight:700;
+    }
+
+    .memory-card p { font-size:0.95rem; }
+
+    footer {
+      text-align:center;
+      padding:15px;
+      color:white;
+      font-weight:600;
+    }
+
+    /* Floating Hearts */
+    .hearts-container {
+      position:fixed;
+      width:100%; height:100%;
+      top:0; left:0;
+      pointer-events:none;
+      z-index:-1;
+    }
+    .heart {
+      position:absolute;
+      width:22px; height:22px;
+      background:#ff4f9b;
+      transform:rotate(45deg);
+      animation: floatUp linear forwards;
+      opacity:0.9;
+    }
+    .heart::before,
+    .heart::after {
+      content:"";
+      position:absolute;
+      width:22px; height:22px;
+      background:#ff4f9b;
+      border-radius:50%;
+    }
+    .heart::before { top:-11px; left:0; }
+    .heart::after { left:11px; top:0; }
+
+    @keyframes floatUp {
+      0% { transform:translateY(0) rotate(45deg); opacity:1; }
+      100% { transform:translateY(-650px) rotate(45deg); opacity:0; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== ACCESS RESTRICTION ===== -->
+  <script>
+    // Require authentication to view memories
+    async function checkAuth() {
+      // Try server-side token first (localStorage token set after password check)
+      const token = localStorage.getItem('memoriesToken');
+      if (token) {
+        try {
+          const res = await fetch('/memories', { headers: { 'Authorization': `Bearer ${token}` }});
+          if (res.ok) { return true; }
+        } catch (err) { /* network error, try fallback */ }
+      }
+      // Last fallback: local flag
+      return localStorage.getItem('memoriesUnlocked') === 'true';
+    }
+    (async () => { if (!await checkAuth()) window.location.href = 'password.html'; })();
+    const allowedReferrer = "password.html";
+    const ref = document.referrer.split("/").pop();
+    if (ref !== allowedReferrer) {
+      alert("Visit password page & enter correct password to explore memories");
+      window.location.href = "index.html";
+    }
+  </script>
+
+  <div class="bg-overlay"></div>
+  <div class="sparkles"></div>
+  <div class="hearts-container"></div>
+
+  <header>
+    <h1 class="brand">Captured in Love</h1>
+    <p class="love-quote">"Every memory with you is a treasure ❤"</p>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="timeline.html">Timeline</a>
+      <a href="love-calculator.html">Love Calculator</a>
+      <a href="playlist.html">Playlist</a>
+      <a href="password.html">Password</a>
+    </nav>
+  </header>
+
+  <!-- Upload Form -->
+  <section class="upload-memory" style="padding:30px 20px; text-align:center;">
+    <h2>Add a Memory 📷</h2>
+
+    <form id="memory-form" style="max-width:680px; margin:12px auto; display:flex; flex-direction:column; gap:12px;">
+      <input type="text" name="name" placeholder="Memory Name" required>
+      <input type="text" name="caption" placeholder="Caption" required>
+      <textarea name="details" placeholder="Details" required></textarea>
+      <input type="file" name="image" id="imageFile" accept="image/*" required>
+      <button class="btn" type="submit">Upload Memory ❤</button>
+    </form>
+  </section>
+
+  <!-- Memory Cards -->
+  <section class="featured-memories">
+    <h2>All Memories</h2>
+    <div id="memory-container" class="memory-grid"></div>
+
+    <div id="memory-modal" style="display:none; position:fixed; top:0;left:0; right:0;bottom:0; background:rgba(0,0,0,0.75); align-items:center; justify-content:center; z-index:9999;">
+      <div style="max-width:720px; width:90%; background:white; color:#111; border-radius:14px; padding:18px; position:relative;">
+        <button id="modal-close" style="position:absolute; right:12px; top:12px; border:none; background:#ff79b6; color:white; border-radius:6px; padding:6px 10px; cursor:pointer;">Close</button>
+        <img id="modal-image" src="" alt="Memory" style="width:100%; border-radius:10px; margin-bottom:12px;"/>
+        <h3 id="modal-caption" style="margin:8px 0"></h3>
+        <p id="modal-name" style="font-weight:600; margin:8px 0"></p>
+        <p id="modal-details"></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>N ❤ D</p>
+  </footer>
+
+  <!-- Memory Logic -->
+  <script>
+    /* ===== Existing memory logic script ===== */
+    const form = document.getElementById('memory-form');
+    const container = document.getElementById('memory-container');
+
+    // Use local fallback if server not reachable, but prefer server data
+    let memories = JSON.parse(localStorage.getItem('memories')) || [];
+
+    // Helper: auth headers when a token exists
+    function getAuthHeaders(contentType) {
+      const token = localStorage.getItem('memoriesToken');
+      const headers = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      if (contentType) headers['Content-Type'] = contentType;
+      return headers;
+    }
+
+    // Load from server if possible, otherwise fallback to localStorage
+    async function loadFromServer() {
+      const token = localStorage.getItem('memoriesToken');
+      if (token) {
+        try {
+          const res = await fetch('/memories', { headers: getAuthHeaders() });
+          if (res.status === 401) { window.location.href = 'password.html'; return; }
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data)) {
+              memories = data.reverse(); // latest first
+              localStorage.setItem('memories', JSON.stringify(memories));
+              displayMemories();
+              return;
+            }
+          }
+        } catch (err) { /* network error — fallback to local */ }
+      }
+      // fallback
+      memories = JSON.parse(localStorage.getItem('memories')) || [];
+      displayMemories();
+    }
+
+    function displayMemories() {
+      container.innerHTML = '';
+      for (let i = 0; i < memories.length; i++) {
+        const m = memories[i];
+        const card = document.createElement('div');
+        card.className = 'memory-card';
+
+        const imgSrc = m.image || m.imageUrl || m.src || '';
+        card.innerHTML = `
+          <img src="${imgSrc}" alt="Memory">
+          <h3>${m.caption}</h3>
+          <p><strong>By:</strong> ${m.name}</p>
+          <div style="margin-top:8px; display:flex; gap:8px; justify-content:center;">
+            <button class="btn edit" style="background:#6bffb8; color:#111">Edit</button>
+            <button class="btn delete" style="background:#ff6b9a">Delete</button>
+          </div>
+        `;
+        card.dataset.details = m.details || '';
+        card.dataset.name = m.name || '';
+        card.dataset.caption = m.caption || '';
+        card.dataset.src = imgSrc;
+        if (m.id) card.dataset.id = m.id;
+        container.appendChild(card);
+
+        // Delete handler
+        const deleteBtn = card.querySelector('.delete');
+        deleteBtn.addEventListener('click', async () => {
+          if (!confirm('Delete this memory permanently?')) return;
+          if (m.id) {
+            // server delete
+            try {
+              const headers = getAuthHeaders();
+              const resp = await fetch(`/memories/${encodeURIComponent(m.id)}`, { method: 'DELETE', headers });
+              if (resp.status === 401) { window.location.href = 'password.html'; return; }
+              if (resp.ok) {
+                // reload from server
+                await loadFromServer();
+              } else {
+                const err = await resp.json().catch(()=>({}));
+                alert(err.error || 'Failed to delete memory on server');
+              }
+            } catch (err) {
+              alert('Network error while deleting memory');
+            }
+          } else {
+            // local delete
+            memories.splice(i, 1);
+            localStorage.setItem('memories', JSON.stringify(memories));
+            displayMemories();
+          }
+        });
+
+        // Edit handler
+        const editBtn = card.querySelector('.edit');
+        editBtn.addEventListener('click', async () => {
+          // reuse modal to edit
+          const modal = document.getElementById('memory-modal');
+          document.getElementById('modal-image').src = card.dataset.src;
+          document.getElementById('modal-caption').innerText = '';
+          document.getElementById('modal-name').innerText = '';
+          // create inputs
+          document.getElementById('modal-details').innerHTML = `\n            <label style='display:block;margin-bottom:6px'>Caption</label>\n            <input id='modal-caption-input' value='${m.caption || ''}' style='width:100%;padding:8px;border-radius:6px;margin-bottom:8px'/>\n            <label style='display:block;margin-bottom:6px'>By</label>\n            <input id='modal-name-input' value='${m.name || ''}' style='width:100%;padding:8px;border-radius:6px;margin-bottom:8px'/>\n            <label style='display:block;margin-bottom:6px'>Details</label>\n            <textarea id='modal-details-input' style='width:100%;height:120px;padding:8px;border-radius:6px'>${m.details || ''}</textarea>\n            <button id='modal-save' class='btn' style='margin-top:8px'>Save</button>`;
+          modal.style.display = 'flex';
+          document.getElementById('modal-save').onclick = async () => {
+            const newCap = document.getElementById('modal-caption-input').value;
+            const newName = document.getElementById('modal-name-input').value;
+            const newDetails = document.getElementById('modal-details-input').value;
+            if (m.id) {
+              // server update
+              try {
+                const headers = getAuthHeaders('application/json');
+                const resp = await fetch(`/memories/${encodeURIComponent(m.id)}`, { method: 'PUT', headers, body: JSON.stringify({ caption: newCap, name: newName, details: newDetails }) });
+                if (resp.status === 401) { window.location.href = 'password.html'; return; }
+                if (resp.ok) { await loadFromServer(); modal.style.display = 'none'; return; }
+                const err = await resp.json().catch(()=>({}));
+                alert(err.error || 'Failed to update on server');
+              } catch (err) { alert('Network error while updating'); }
+            } else {
+              // local update
+              memories[i] = Object.assign({}, memories[i], { caption: newCap, name: newName, details: newDetails });
+              localStorage.setItem('memories', JSON.stringify(memories));
+              displayMemories();
+              modal.style.display = 'none';
+            }
+          };
+        });
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const fileInput = document.getElementById('imageFile');
+      const file = fileInput.files[0];
+      if (!file) { alert('Please choose an image file'); return; }
+      const caption = data.get('caption');
+      const nameVal = data.get('name');
+      const detailsVal = data.get('details');
+
+      // Try to upload to server if token present, otherwise fallback to storing locally
+      const token = localStorage.getItem('memoriesToken');
+      if (token) {
+        try {
+          const fd = new FormData();
+          fd.append('file', file);
+          fd.append('caption', caption);
+          fd.append('name', nameVal);
+          fd.append('details', detailsVal);
+          const headers = getAuthHeaders();
+          const resp = await fetch('/upload-memory', { method: 'POST', headers, body: fd });
+          if (resp.status === 401) { window.location.href = 'password.html'; return; }
+          if (resp.ok) {
+            // server saved; reload
+            await loadFromServer();
+            form.reset();
+            return;
+          }
+          // otherwise fallback to local
+        } catch (err) { /* network or CORS issue — fallback to local */ }
+      }
+      // Local fallback: store as dataURL so it persists in the browser only
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const memory = { name: nameVal, caption, details: detailsVal, image: e.target.result };
+        memories.unshift(memory);
+        localStorage.setItem('memories', JSON.stringify(memories));
+        displayMemories();
+        form.reset();
+      }
+      reader.readAsDataURL(file);
+    });
+
+    // If token exists or server is up, prefer server data; otherwise display local
+    (async () => { await loadFromServer(); })();
+
+    // Hearts animation
+    const heartsContainer = document.querySelector('.hearts-container');
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (3 + Math.random() * 3) + 's';
+      heartsContainer.appendChild(heart);
+      setTimeout(() => heart.remove(), 6000);
+    }
+    setInterval(createHeart, 400);
+  </script>
+
+</body>
+</html>

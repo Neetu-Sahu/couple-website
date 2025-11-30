@@ -1,0 +1,211 @@
+/* Global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: #fff;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Background Image */
+body {
+    background: url('assets/bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.bg-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: -1;
+}
+
+/* Header */
+header {
+    text-align: center;
+    padding: 50px 20px 30px;
+}
+
+/* Brand heading uses Great Vibes */
+header h1, .brand {
+    font-size: 4.2rem;
+    color: #ff7ab8;
+    /* Use decorative serif: Cinzel -> Playfair fallback -> Great Vibes for cursive feel */
+    font-family: 'Cinzel', 'Playfair Display', 'Great Vibes', serif;
+    text-shadow: 2px 2px 20px rgba(0,0,0,0.6);
+    letter-spacing: 1px;
+    background: linear-gradient(90deg,#ffb6d6,#ff79b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+header .love-quote {
+    font-size: 1.25rem;
+    margin-top: 8px;
+    color: #ffeef8;
+}
+
+/* Navigation */
+nav {
+    margin-top: 30px;
+}
+
+nav a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.05rem;
+    margin: 0 12px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+nav a:hover {
+    color: #fff;
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* Memories Section */
+.featured-memories {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.featured-memories h2 {
+    font-size: 3rem;
+    margin-bottom: 30px;
+}
+
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.memory-card {
+    background: linear-gradient(135deg, rgba(255, 105, 180, 0.12), rgba(255, 180, 200, 0.06));
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.memory-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.memory-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+}
+
+/* Small details */
+.btn, button, input[type="submit"] {
+    display: inline-block;
+    background: linear-gradient(90deg, #ff9cc9, #ff77b6);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 10px 30px rgba(255,110,160,0.14);
+    transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+/* Important Dates */
+.important-dates {
+    background: rgba(0,0,0,0.6);
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.important-dates h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.important-dates ul {
+    list-style: none;
+    font-size: 1.2rem;
+}
+
+.important-dates li {
+    margin: 10px 0;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 2rem;
+    background: rgba(0,0,0,0.5);
+    position: relative;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    header h1 { font-size: 3rem; }
+    .featured-memories h2 { font-size: 2rem; }
+}
+
+header .brand::after {
+    content: ' 📸';
+    display: inline-block;
+    transform-origin: center;
+    margin-left: 6px;
+    animation: bob 3s infinite ease-in-out;
+}
+
+.btn:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 12px 30px rgba(255, 100, 170, 0.25);
+}
+
+button:active, .btn:active { transform: translateY(1px) scale(0.995); }
+
+/* Headers and subheadings */
+h2, h3, h4 { font-family: 'Playfair Display', serif; color: #ffd1e6; }
+
+/* Stickers */
+.sticker { display:inline-block; padding:6px 10px; margin-left:8px; border-radius:14px; background: rgba(255,255,255,0.04); color:#ffffff; font-weight:700; }
+.sticker.love { background: linear-gradient(90deg,#ffb0d8,#ff78b1); }
+.sticker.camera { background: linear-gradient(90deg,#ffd1b0,#ffc76b); }
+
+/* small playful animations */
+@keyframes bob {
+    0%,100% { transform: translateY(0) }
+    50% { transform: translateY(-6px) }
+}
+
+.memory-card { animation: float 6s ease-in-out infinite; }
+@keyframes float {
+    0%,100% { transform: translateY(0) }
+    50% { transform: translateY(-8px) }
+}
+
+/* stickers */
+.sticker {
+    display:inline-block; padding:4px 8px; border-radius:12px; background: rgba(255,255,255,0.06); color:#fff; font-weight:600;
+}
+
+/* Load fonts (fallback to system if blocked) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@400;600&family=Great+Vibes&family=Cinzel:wght@400;700&display=swap');
